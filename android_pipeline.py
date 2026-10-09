@@ -18,9 +18,9 @@ KEEP_META_PREFIXES = ('Message deleted', 'Location shared:', 'The message is bin
 
 
 def exporter():
-    # Run the exporter with the same interpreter: works in venv, conda and on Windows
-    # without relying on wtsexporter being on PATH.
-    return [sys.executable, '-m', 'Whatsapp_Chat_Exporter']
+    # Same interpreter (venv/conda/Windows, no PATH needed), via wce_run.py which
+    # guards an upstream crash on orphan vCard rows.
+    return [sys.executable, str(ROOT / 'wce_run.py')]
 
 
 def normalize(src, dst):
@@ -66,7 +66,9 @@ def main():
         if not a.cc:
             p.error('--vcf requires --cc')
         cmd += ['--enrich-from-vcards', str(pathlib.Path(a.vcf).expanduser().resolve()), '--default-country-code', a.cc]
-    subprocess.run(cmd, cwd=run, check=True)
+    if subprocess.run(cmd, cwd=run).returncode != 0:
+        # Do not echo the command: it may contain the backup key.
+        sys.exit('Exporter failed (see the messages above). Check key, backup file and --vcf.')
     if not raw.is_file():
         sys.exit('Exporter produced no JSON: check key / database.')
 

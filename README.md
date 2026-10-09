@@ -22,6 +22,8 @@ Output: `report/dashboard.html`, CSV rankings in `report/`, incremental archive 
 
 **Counting parity with iPhone:** `update.py` excludes system events via the iOS code `message_type == 6`. Android system events carry other codes, so `android_pipeline.py` retags them as 6 (original kept in `android_message_type`). Deleted messages and locations stay counted; call records are excluded, as on iPhone.
 
+`wce_run.py` runs the exporter with a guard for an upstream 0.13.0 crash on vCard messages whose chat is not exported (`'NoneType' object has no attribute 'get_message'`); those rows are skipped, message counts are unaffected.
+
 `.gitignore` excludes `*.crypt1x`, `*.vcf` and key files: keep backups in this folder without risk of committing them.
 
 ---

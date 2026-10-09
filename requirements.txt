@@ -1,1 +1,1 @@
-whatsapp-chat-exporter==0.13.0
+whatsapp-chat-exporter[crypt15]==0.13.0

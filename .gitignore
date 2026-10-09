@@ -21,3 +21,12 @@ txt/
 media/
 Media/
 .DS_Store
+
+# Android sources: backups, keys and contact exports must never be committed
+*.crypt12
+*.crypt14
+*.crypt15
+*.vcf
+key
+*.key
+*.txt.key

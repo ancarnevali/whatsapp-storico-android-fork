@@ -1,3 +1,31 @@
+# WhatsApp storico — Android fork
+
+Fork of [SirPopiel/whatsapp-storico](https://github.com/SirPopiel/whatsapp-storico) adding an Android source. The analysis (`update.py`, `build_dashboard.py`, dashboard) is unchanged; `android_pipeline.py` replaces the iPhone extraction step.
+
+## Android
+
+**Requirements:** Python ≥ 3.10 (conda env or venv), then `python -m pip install -r requirements.txt` (includes the `crypt15` extra needed to decrypt backups).
+
+**Get the data (no root):**
+1. WhatsApp → Settings → Chats → Chat backup → *End-to-end encrypted backup* → on, choosing **"Use 64-digit encryption key instead"**. Save the key. Password-based E2E backups cannot be decrypted.
+2. *Back up* now.
+3. Copy `Android/media/com.whatsapp/WhatsApp/Databases/msgstore.db.crypt15` to this folder via USB.
+4. Optional, for contact names: export contacts from the Contacts app as `.vcf`.
+
+**Run:**
+```
+python android_pipeline.py --backup msgstore.db.crypt15 --vcf contatti.vcf --cc 34
+```
+Omit `--key` to be prompted for the 64-digit key. Rooted phone: `--db msgstore.db --wa wa.db`. On Windows, `aggiorna_android.bat` does the install + run with the active env (pass the same arguments).
+
+Output: `report/dashboard.html`, CSV rankings in `report/`, incremental archive in `data/android_archive.sqlite`, raw exports in `data/android-runs/<date>/`.
+
+**Counting parity with iPhone:** `update.py` excludes system events via the iOS code `message_type == 6`. Android system events carry other codes, so `android_pipeline.py` retags them as 6 (original kept in `android_message_type`). Deleted messages and locations stay counted; call records are excluded, as on iPhone.
+
+`.gitignore` excludes `*.crypt1x`, `*.vcf` and key files: keep backups in this folder without risk of committing them.
+
+---
+
 # WhatsApp storico — iPhone come fonte principale
 
 **Le classifiche del precedente database Mac sono provvisorie.** Il flusso corrente verifica ed estrae il backup Finder dell’iPhone, confronta il risultato con il Mac e soltanto dopo genera le classifiche.

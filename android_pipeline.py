@@ -55,7 +55,7 @@ def main():
     run = ROOT / 'data/android-runs' / dt.datetime.now().strftime('%Y%m%d-%H%M%S')
     run.mkdir(parents=True)
     raw = run / 'android.json'
-    cmd = exporter() + ['-a', '-o', str(run / 'html'), '-j', str(raw), '--txt', str(run / 'txt'), '--no-html', '--no-banner']
+    cmd = exporter() + ['-a', '-o', str(run / 'html'), '-j', str(raw), '--no-html', '--no-banner']
     if a.db:
         cmd += ['-d', str(pathlib.Path(a.db).expanduser().resolve())]
     else:
